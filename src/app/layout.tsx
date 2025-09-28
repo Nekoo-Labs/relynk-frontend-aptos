@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { clashDisplay } from "./fonts";
+import { WalletProvider } from "./WalletProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Relynk",
@@ -15,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${clashDisplay.variable} antialiased`}>{children}</body>
+      <body className={`${clashDisplay.variable} antialiased`}>
+        <WalletProvider>{children}</WalletProvider>
+        <Toaster />
+      </body>
     </html>
   );
 }

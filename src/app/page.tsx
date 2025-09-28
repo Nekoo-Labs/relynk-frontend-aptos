@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function Home() {
   return (
@@ -7,7 +6,7 @@ export default function Home() {
       <div className="flex flex-col gap-4 items-center row-start-2">
         <h1>Nothing to see here, go to App!</h1>
         <Button asChild>
-          <Link href="/app">App</Link>
+          <a href="http://app.localhost:3000">App</a>
         </Button>
       </div>
     </div>

@@ -33,7 +33,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-interface Link {
+interface BaseLink {
   id: string;
   title: string;
   url: string;
@@ -42,6 +42,20 @@ interface Link {
   clicks: number;
   icon: string;
 }
+
+interface RegularLink extends BaseLink {
+  type: "regular";
+}
+
+interface PaymentLink extends BaseLink {
+  type: "payment";
+  paymentLinkId: string;
+  price: number;
+  currency: string;
+}
+
+export type Link = RegularLink | PaymentLink;
+export type { RegularLink, PaymentLink, BaseLink };
 
 interface LinkManagerProps {
   links: Link[];
@@ -61,7 +75,7 @@ export function LinkManager({ links, onLinksUpdate }: LinkManagerProps) {
   const handleAddLink = () => {
     if (!formData.title || !formData.url) return;
 
-    const newLink: Link = {
+    const newLink: RegularLink = {
       id: Date.now().toString(),
       title: formData.title,
       url: formData.url,
@@ -69,6 +83,7 @@ export function LinkManager({ links, onLinksUpdate }: LinkManagerProps) {
       isActive: true,
       clicks: 0,
       icon: formData.icon,
+      type: "regular",
     };
 
     onLinksUpdate([...links, newLink]);
@@ -285,12 +300,16 @@ export function LinkManager({ links, onLinksUpdate }: LinkManagerProps) {
                       <ChevronDown />
                     </Button>
                   </div>
-
                   <div className="text-lg">{link.icon}</div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h4 className="font-medium truncate">{link.title}</h4>
+                      {link.type === "payment" && (
+                        <Badge variant="secondary" className="text-xs">
+                          {link.price} {link.currency}
+                        </Badge>
+                      )}
                       {!link.isActive && (
                         <Badge variant="secondary" className="text-xs">
                           Hidden

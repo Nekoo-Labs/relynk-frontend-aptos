@@ -26,6 +26,7 @@ import {
   Edit3,
 } from "lucide-react";
 import Link from "next/link";
+import { AnimatedDiv } from "@/components/ui/animated-wrapper";
 
 // Mock payment links data with enhanced features
 const mockPaymentLinks = [
@@ -177,13 +178,13 @@ export default function PaymentLinks() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+        <AnimatedDiv>
           <h1 className="text-2xl font-bold">Payment Links</h1>
           <p className="text-muted-foreground">
             Create and manage your Web3 payment links
           </p>
-        </div>
-        <div className="flex gap-2">
+        </AnimatedDiv>
+        <AnimatedDiv className="flex gap-2">
           <Button onClick={navigateToWithdraw} variant="outline">
             <Wallet className="w-4 h-4" />
             Withdraw Funds
@@ -192,11 +193,11 @@ export default function PaymentLinks() {
             <Plus className="w-4 h-4" />
             Create Payment Link
           </Button>
-        </div>
+        </AnimatedDiv>
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <AnimatedDiv className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -258,156 +259,158 @@ export default function PaymentLinks() {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </AnimatedDiv>
 
       {/* Payment Links List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Payment Links</CardTitle>
-          <CardDescription>
-            Manage your Web3 payment links and track performance
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {mockPaymentLinks.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <div className="mb-4">
-                <DollarSign className="w-12 h-12 mx-auto opacity-50" />
+      <AnimatedDiv>
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Payment Links</CardTitle>
+            <CardDescription>
+              Manage your Web3 payment links and track performance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {mockPaymentLinks.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <div className="mb-4">
+                  <DollarSign className="w-12 h-12 mx-auto opacity-50" />
+                </div>
+                <p className="text-lg font-medium mb-2">No payment links yet</p>
+                <p className="text-sm mb-4">
+                  Create your first payment link to start earning
+                </p>
+                <Button onClick={navigateToCreate}>
+                  <Plus className="w-4 h-4" />
+                  Create Your First Payment Link
+                </Button>
               </div>
-              <p className="text-lg font-medium mb-2">No payment links yet</p>
-              <p className="text-sm mb-4">
-                Create your first payment link to start earning
-              </p>
-              <Button onClick={navigateToCreate}>
-                <Plus className="w-4 h-4" />
-                Create Your First Payment Link
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {paymentLinks.map((link) => {
-                link.url = `${appUrl}${mockUser.username}/${link.slug}`;
+            ) : (
+              <div className="space-y-4">
+                {paymentLinks.map((link) => {
+                  link.url = `${appUrl}${mockUser.username}/${link.slug}`;
 
-                return (
-                  <div
-                    key={link.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium truncate">{link.title}</h4>
-                        {link.isActive ? (
-                          <Badge variant="default" className="text-xs">
-                            Active
-                          </Badge>
-                        ) : (
-                          <Badge variant="secondary" className="text-xs">
-                            Inactive
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2 truncate">
-                        {link.description}
-                      </p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="font-medium">
-                          ${link.price} {link.currency}
-                          {link.type === "subscription" && (
-                            <Badge variant="outline" className="ml-1 text-xs">
-                              <Repeat className="w-3 h-3 mr-1" />
-                              {link.billingInterval}
+                  return (
+                    <div
+                      key={link.id}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium truncate">{link.title}</h4>
+                          {link.isActive ? (
+                            <Badge variant="default" className="text-xs">
+                              Active
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-xs">
+                              Inactive
                             </Badge>
                           )}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {link.totalSales} sales
-                        </span>
-                        <span className="text-muted-foreground">
-                          ${link.totalEarned} earned
-                        </span>
-                        {link.allowCustomAmount && (
-                          <Badge variant="secondary" className="text-xs">
-                            Custom amount
-                          </Badge>
-                        )}
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2 truncate">
+                          {link.description}
+                        </p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <span className="font-medium">
+                            ${link.price} {link.currency}
+                            {link.type === "subscription" && (
+                              <Badge variant="outline" className="ml-1 text-xs">
+                                <Repeat className="w-3 h-3 mr-1" />
+                                {link.billingInterval}
+                              </Badge>
+                            )}
+                          </span>
+                          <span className="text-muted-foreground">
+                            {link.totalSales} sales
+                          </span>
+                          <span className="text-muted-foreground">
+                            ${link.totalEarned} earned
+                          </span>
+                          {link.allowCustomAmount && (
+                            <Badge variant="secondary" className="text-xs">
+                              Custom amount
+                            </Badge>
+                          )}
+                        </div>
+                        <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-2 inline-block">
+                          {link.url}
+                        </code>
                       </div>
-                      <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-2 inline-block">
-                        {link.url}
-                      </code>
-                    </div>
 
-                    <div className="flex items-center gap-1 ml-4">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopyUrl(link.url)}
-                        title="Copy payment link"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigateToEmbed(link.id)}
-                        title="Get embed code"
-                      >
-                        <Code className="w-4 h-4" />
-                      </Button>
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        asChild
-                        title="Open payment link"
-                      >
-                        <a
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      <div className="flex items-center gap-1 ml-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleCopyUrl(link.url)}
+                          title="Copy payment link"
                         >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </Button>
+                          <Copy className="w-4 h-4" />
+                        </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleToggleActive(link.id)}
-                        title={link.isActive ? "Deactivate" : "Activate"}
-                      >
-                        {link.isActive ? "🟢" : "🔴"}
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigateToEmbed(link.id)}
+                          title="Get embed code"
+                        >
+                          <Code className="w-4 h-4" />
+                        </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigateToEdit(link.id)}
-                        title="Edit payment link"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          asChild
+                          title="Open payment link"
+                        >
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteLink(link.id)}
-                        className="text-destructive hover:text-destructive"
-                        title="Delete payment link"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleToggleActive(link.id)}
+                          title={link.isActive ? "Deactivate" : "Activate"}
+                        >
+                          {link.isActive ? "🟢" : "🔴"}
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigateToEdit(link.id)}
+                          title="Edit payment link"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteLink(link.id)}
+                          className="text-destructive hover:text-destructive"
+                          title="Delete payment link"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </AnimatedDiv>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <AnimatedDiv className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Quick Setup</CardTitle>
@@ -461,7 +464,7 @@ export default function PaymentLinks() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </AnimatedDiv>
     </div>
   );
 }

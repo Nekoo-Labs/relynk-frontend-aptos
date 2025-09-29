@@ -13,6 +13,8 @@ import { BarChart3, TrendingUp, Eye, MousePointer } from "lucide-react";
 
 import { useState } from "react";
 
+import { AnimatedDiv } from "@/components/ui/animated-wrapper";
+
 // Mock analytics data
 const mockAnalytics = {
   totalViews: 1247,
@@ -65,13 +67,13 @@ export default function Analytics() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+        <AnimatedDiv>
           <h1 className="text-2xl font-bold">Analytics</h1>
           <p className="text-muted-foreground">
             Track your profile performance and link engagement
           </p>
-        </div>
-        <div className="flex items-center gap-2">
+        </AnimatedDiv>
+        <AnimatedDiv className="flex items-center gap-2">
           <Button
             variant={timeRange === "7d" ? "default" : "outline"}
             size="sm"
@@ -93,11 +95,11 @@ export default function Analytics() {
           >
             90 Days
           </Button>
-        </div>
+        </AnimatedDiv>
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <AnimatedDiv className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -160,115 +162,121 @@ export default function Analytics() {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </AnimatedDiv>
 
       {/* Top Performing Links */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Performing Links</CardTitle>
-          <CardDescription>
-            Your most clicked links in the selected time period
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockAnalytics.topLinks.map((link, index) => (
-              <div
-                key={link.id}
-                className="flex flex-col gap-y-2 sm:flex-row items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-medium">
-                    {index + 1}
+      <AnimatedDiv>
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Performing Links</CardTitle>
+            <CardDescription>
+              Your most clicked links in the selected time period
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {mockAnalytics.topLinks.map((link, index) => (
+                <div
+                  key={link.id}
+                  className="flex flex-col gap-y-2 sm:flex-row items-center justify-between p-4 border rounded-lg"
+                >
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-medium">
+                      {index + 1}
+                    </div>
+                    <div className="text-lg">{link.icon}</div>
+                    <div className="flex-1 min-w-0 text-center sm:text-start">
+                      <h4 className="font-medium truncate">{link.title}</h4>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {link.url}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-lg">{link.icon}</div>
-                  <div className="flex-1 min-w-0 text-center sm:text-start">
-                    <h4 className="font-medium truncate">{link.title}</h4>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {link.url}
-                    </p>
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="text-center">
+                      <div className="font-medium">{link.clicks}</div>
+                      <div className="text-muted-foreground">Clicks</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-medium">{link.views}</div>
+                      <div className="text-muted-foreground">Views</div>
+                    </div>
+                    <div className="text-center">
+                      <Badge variant="secondary">{link.ctr}% CTR</Badge>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-6 text-sm">
-                  <div className="text-center">
-                    <div className="font-medium">{link.clicks}</div>
-                    <div className="text-muted-foreground">Clicks</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-medium">{link.views}</div>
-                    <div className="text-muted-foreground">Views</div>
-                  </div>
-                  <div className="text-center">
-                    <Badge variant="secondary">{link.ctr}% CTR</Badge>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </AnimatedDiv>
 
       {/* Recent Activity Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>
-            Daily views and clicks over the past week
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4 divide-y-1">
-            {mockAnalytics.recentActivity.map((day) => (
-              <div
-                key={day.date}
-                className="flex py-4 flex-col sm:flex-row items-center justify-between"
-              >
-                <div className="text-sm font-medium">
-                  {new Date(day.date).toLocaleDateString("en-US", {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}
+      <AnimatedDiv>
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>
+              Daily views and clicks over the past week
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 divide-y-1">
+              {mockAnalytics.recentActivity.map((day) => (
+                <div
+                  key={day.date}
+                  className="flex py-4 flex-col sm:flex-row items-center justify-between"
+                >
+                  <div className="text-sm font-medium">
+                    {new Date(day.date).toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm">{day.views} views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm">{day.clicks} clicks</span>
+                    </div>
+                    <div className="w-32 bg-muted rounded-full h-2">
+                      <div
+                        className="bg-green-500 h-2 rounded-full"
+                        style={{
+                          width: `${(day.clicks / day.views) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm">{day.views} views</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm">{day.clicks} clicks</span>
-                  </div>
-                  <div className="w-32 bg-muted rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full"
-                      style={{
-                        width: `${(day.clicks / day.views) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </AnimatedDiv>
 
       {/* Export Options */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Export Data</CardTitle>
-          <CardDescription>
-            Download your analytics data for external analysis
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline">Export CSV</Button>
-            <Button variant="outline">Export PDF Report</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <AnimatedDiv>
+        <Card>
+          <CardHeader>
+            <CardTitle>Export Data</CardTitle>
+            <CardDescription>
+              Download your analytics data for external analysis
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline">Export CSV</Button>
+              <Button variant="outline">Export PDF Report</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </AnimatedDiv>
     </div>
   );
 }

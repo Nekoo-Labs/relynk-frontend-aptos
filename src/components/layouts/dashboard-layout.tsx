@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { motion } from "motion/react";
+import { containerVariants } from "@/lib/motion";
+
 export default function DashboardLayout({
   children,
   className,
@@ -36,9 +39,15 @@ export default function DashboardLayout({
           </Link>
         ))}
       </aside>
-      <main className={cn("sm:px-4 space-y-4 @container", className)}>
+      <motion.main
+        variants={containerVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className={cn("sm:px-4 space-y-4 @container", className)}
+      >
         {children}
-      </main>
+      </motion.main>
     </section>
   );
 }

@@ -1,3 +1,4 @@
+import AppRedirect from "@/components/app-redirect";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -6,7 +7,7 @@ export default function Home() {
       <div className="flex flex-col gap-4 items-center row-start-2">
         <h1>Nothing to see here, go to App!</h1>
         <Button asChild>
-          <a href="http://app.localhost:3000">App</a>
+          <AppRedirect />
         </Button>
       </div>
     </div>

@@ -1,14 +1,23 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const appDomain = process.env.APP_DOMAIN || "app.localhost";
+const appDomain = process.env.APP_DOMAIN || "app.localhost:3000";
 
 export function middleware(req: NextRequest) {
   const host = req.headers.get("host") || "";
   const url = req.nextUrl;
 
+  // Skip middleware for static assets and Next.js internals
+  if (
+    url.pathname.startsWith("/_next") ||
+    url.pathname.startsWith("/api") ||
+    url.pathname.includes(".") // Skip files with extensions
+  ) {
+    return NextResponse.next();
+  }
+
   // ✅ Detect app domain (local + prod)
-  const isAppDomain = host.startsWith(appDomain);
+  const isAppDomain = host.includes(appDomain);
 
   // 🧭 Handle requests from app domain
   if (isAppDomain) {
@@ -17,7 +26,7 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
-    // Don’t rewrite if already inside /dashboard routes
+    // Don't rewrite if already inside /dashboard routes
     if (!url.pathname.startsWith("/dashboard")) {
       return NextResponse.rewrite(
         new URL(`/dashboard${url.pathname}`, req.url)
@@ -32,7 +41,11 @@ export function middleware(req: NextRequest) {
   else {
     // If user tries to access /dashboard on main domain → redirect to app domain
     if (url.pathname.startsWith("/dashboard")) {
-      return NextResponse.redirect(`http://app.${host}${url.pathname}`);
+      const protocol = req.nextUrl.protocol;
+      const port = host.includes(":") ? `:${host.split(":")[1]}` : "";
+      return NextResponse.redirect(
+        `${protocol}//app.${host.split(":")[0]}${port}${url.pathname}`
+      );
     }
 
     // Otherwise serve as normal
@@ -41,5 +54,15 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder files
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)",
+  ],
 };

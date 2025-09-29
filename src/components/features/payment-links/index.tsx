@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,66 +9,118 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import useUrl from "@/hooks/use-url";
 import {
   Plus,
-  DollarSign,
-  Link as LinkIcon,
-  Copy,
-  Edit3,
-  Trash2,
   ExternalLink,
+  Copy,
+  Trash2,
+  DollarSign,
   TrendingUp,
-  Link,
+  Download,
+  Wallet,
+  LinkIcon,
+  Repeat,
+  Code,
+  Edit3,
 } from "lucide-react";
+import Link from "next/link";
 
-// Mock payment links data
+// Mock payment links data with enhanced features
 const mockPaymentLinks = [
   {
     id: "1",
     title: "Web3 Consultation",
-    description: "1-hour consultation on Web3 development",
-    amount: 150,
-    currency: "APT",
-    url: "https://relynk.app/pay/consultation-123",
+    description:
+      "1-hour consultation on Web3 development and blockchain integration",
+    price: 150,
+    currency: "USDC",
+    slug: "web3-consultation",
+    url: "https://rely.ink/johndoe/web3-consultation",
+    type: "one_time" as const,
+    contentType: "link" as const,
+    contentValue: "https://calendly.com/johndoe/consultation",
     isActive: true,
     totalEarned: 1200,
     totalSales: 8,
     createdAt: "2024-01-10",
+    allowCustomAmount: false,
+    maxPurchases: undefined,
+    expiresAt: undefined,
   },
   {
     id: "2",
     title: "NFT Design Course",
-    description: "Complete guide to designing NFTs",
-    amount: 99,
-    currency: "APT",
-    url: "https://relynk.app/pay/nft-course-456",
+    description: "Complete guide to designing and minting NFTs",
+    price: 99,
+    currency: "USDC",
+    slug: "nft-design-course",
+    url: "https://rely.ink/johndoe/nft-design-course",
+    type: "subscription" as const,
+    billingInterval: "monthly" as const,
+    contentType: "file" as const,
+    contentValue: "https://course.johndoe.dev/nft-design.zip",
     isActive: true,
     totalEarned: 2970,
     totalSales: 30,
     createdAt: "2024-01-05",
+    allowCustomAmount: false,
+    maxPurchases: 100,
+    expiresAt: undefined,
   },
   {
     id: "3",
     title: "Coffee Support",
     description: "Buy me a coffee to support my work",
-    amount: 5,
-    currency: "APT",
-    url: "https://relynk.app/pay/coffee-789",
+    price: 5,
+    currency: "USDC",
+    slug: "coffee-support",
+    url: "https://rely.ink/johndoe/coffee-support",
+    type: "one_time" as const,
+    contentType: "text" as const,
+    contentValue:
+      "Thank you for your support! Your contribution helps me create more content.",
     isActive: true,
     totalEarned: 125,
     totalSales: 25,
     createdAt: "2024-01-01",
+    allowCustomAmount: true,
+    minimumAmount: 3,
+    maxPurchases: undefined,
+    expiresAt: undefined,
   },
 ];
 
+// Mock user data
+const mockUser = {
+  username: "johndoe",
+  availableBalance: 2847.5,
+};
+
 export default function PaymentLinks() {
-  const totalEarnings = mockPaymentLinks.reduce(
+  const { appUrl } = useUrl({ withoutSubdomain: true });
+
+  // Generate dynamic URLs for mock data
+  const generatePaymentLinkUrl = (username: string, slug: string) => {
+    return appUrl
+      ? `${appUrl}/${username}/${slug}`
+      : `https://rely.ink/${username}/${slug}`;
+  };
+
+  // Update mock data with dynamic URLs
+  const dynamicMockPaymentLinks = mockPaymentLinks.map((link) => ({
+    ...link,
+    url: generatePaymentLinkUrl(mockUser.username, link.slug),
+  }));
+
+  const [paymentLinks, setPaymentLinks] = useState(dynamicMockPaymentLinks);
+
+  const totalEarnings = paymentLinks.reduce(
     (sum, link) => sum + link.totalEarned,
     0
   );
-  const totalSales = mockPaymentLinks.reduce(
+  const totalSales = paymentLinks.reduce(
     (sum, link) => sum + link.totalSales,
     0
   );
@@ -81,6 +135,44 @@ export default function PaymentLinks() {
     }
   };
 
+  const navigateToCreate = () => {
+    if (typeof window !== "undefined") {
+      window.location.href = "/dashboard/payment-links/create";
+    }
+  };
+
+  const navigateToWithdraw = () => {
+    if (typeof window !== "undefined") {
+      window.location.href = "/dashboard/payment-links/withdraw";
+    }
+  };
+
+  const navigateToEdit = (linkId: string) => {
+    if (typeof window !== "undefined") {
+      window.location.href = `/dashboard/payment-links/${linkId}/edit`;
+    }
+  };
+
+  const navigateToEmbed = (linkId: string) => {
+    if (typeof window !== "undefined") {
+      window.location.href = `/dashboard/payment-links/${linkId}/embed`;
+    }
+  };
+
+  const handleDeleteLink = (linkId: string) => {
+    if (confirm("Are you sure you want to delete this payment link?")) {
+      setPaymentLinks((prev) => prev.filter((link) => link.id !== linkId));
+    }
+  };
+
+  const handleToggleActive = (linkId: string) => {
+    setPaymentLinks((prev) =>
+      prev.map((link) =>
+        link.id === linkId ? { ...link, isActive: !link.isActive } : link
+      )
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -91,10 +183,16 @@ export default function PaymentLinks() {
             Create and manage your Web3 payment links
           </p>
         </div>
-        <Button>
-          <Plus className="w-4 h-4" />
-          Create Payment Link
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={navigateToWithdraw} variant="outline">
+            <Wallet className="w-4 h-4" />
+            Withdraw Funds
+          </Button>
+          <Button onClick={navigateToCreate}>
+            <Plus className="w-4 h-4" />
+            Create Payment Link
+          </Button>
+        </div>
       </div>
 
       {/* Overview Stats */}
@@ -107,7 +205,9 @@ export default function PaymentLinks() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalEarnings} APT</div>
+            <div className="text-2xl font-bold">
+              {totalEarnings.toFixed(2)} USDC
+            </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600 flex items-center gap-1">
                 <TrendingUp className="h-3 w-3" />
@@ -137,15 +237,24 @@ export default function PaymentLinks() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Links</CardTitle>
-            <LinkIcon className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">
+              Available Balance
+            </CardTitle>
+            <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockPaymentLinks.filter((link) => link.isActive).length}
+              {mockUser.availableBalance.toFixed(2)} USDC
             </div>
             <p className="text-xs text-muted-foreground">
-              of {mockPaymentLinks.length} total links
+              <Button
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-xs"
+                onClick={navigateToWithdraw}
+              >
+                Withdraw funds
+              </Button>
             </p>
           </CardContent>
         </Card>
@@ -169,90 +278,129 @@ export default function PaymentLinks() {
               <p className="text-sm mb-4">
                 Create your first payment link to start earning
               </p>
-              <Button>
+              <Button onClick={navigateToCreate}>
                 <Plus className="w-4 h-4" />
                 Create Your First Payment Link
               </Button>
             </div>
           ) : (
             <div className="space-y-4">
-              {mockPaymentLinks.map((link) => (
-                <div
-                  key={link.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-medium truncate">{link.title}</h4>
-                      {link.isActive ? (
-                        <Badge variant="default" className="text-xs">
-                          Active
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="text-xs">
-                          Inactive
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2 truncate">
-                      {link.description}
-                    </p>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="font-medium">
-                        {link.amount} {link.currency}
-                      </span>
-                      <span className="text-muted-foreground">
-                        {link.totalSales} sales
-                      </span>
-                      <span className="text-muted-foreground">
-                        {link.totalEarned} {link.currency} earned
-                      </span>
-                    </div>
-                    <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-2 inline-block">
-                      {link.url}
-                    </code>
-                  </div>
+              {paymentLinks.map((link) => {
+                link.url = `${appUrl}${mockUser.username}/${link.slug}`;
 
-                  <div className="flex items-center gap-1 ml-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleCopyUrl(link.url)}
-                      title="Copy payment link"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
+                return (
+                  <div
+                    key={link.id}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-medium truncate">{link.title}</h4>
+                        {link.isActive ? (
+                          <Badge variant="default" className="text-xs">
+                            Active
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">
+                            Inactive
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2 truncate">
+                        {link.description}
+                      </p>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="font-medium">
+                          ${link.price} {link.currency}
+                          {link.type === "subscription" && (
+                            <Badge variant="outline" className="ml-1 text-xs">
+                              <Repeat className="w-3 h-3 mr-1" />
+                              {link.billingInterval}
+                            </Badge>
+                          )}
+                        </span>
+                        <span className="text-muted-foreground">
+                          {link.totalSales} sales
+                        </span>
+                        <span className="text-muted-foreground">
+                          ${link.totalEarned} earned
+                        </span>
+                        {link.allowCustomAmount && (
+                          <Badge variant="secondary" className="text-xs">
+                            Custom amount
+                          </Badge>
+                        )}
+                      </div>
+                      <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded mt-2 inline-block">
+                        {link.url}
+                      </code>
+                    </div>
 
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      title="Open payment link"
-                    >
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <div className="flex items-center gap-1 ml-4">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopyUrl(link.url)}
+                        title="Copy payment link"
                       >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </Button>
+                        <Copy className="w-4 h-4" />
+                      </Button>
 
-                    <Button variant="ghost" size="sm" title="Edit payment link">
-                      <Edit3 className="w-4 h-4" />
-                    </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigateToEmbed(link.id)}
+                        title="Get embed code"
+                      >
+                        <Code className="w-4 h-4" />
+                      </Button>
 
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-destructive hover:text-destructive"
-                      title="Delete payment link"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        asChild
+                        title="Open payment link"
+                      >
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleToggleActive(link.id)}
+                        title={link.isActive ? "Deactivate" : "Activate"}
+                      >
+                        {link.isActive ? "🟢" : "🔴"}
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigateToEdit(link.id)}
+                        title="Edit payment link"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteLink(link.id)}
+                        className="text-destructive hover:text-destructive"
+                        title="Delete payment link"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>
@@ -268,17 +416,29 @@ export default function PaymentLinks() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full justify-start">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={navigateToCreate}
+            >
               <DollarSign className="w-4 h-4 mr-2" />
-              Consultation Service
+              One-time Payment
             </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <DollarSign className="w-4 h-4 mr-2" />
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={navigateToCreate}
+            >
+              <Repeat className="w-4 h-4 mr-2" />
+              Subscription
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={navigateToCreate}
+            >
+              <Download className="w-4 h-4 mr-2" />
               Digital Product
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Donation/Tip
             </Button>
           </CardContent>
         </Card>

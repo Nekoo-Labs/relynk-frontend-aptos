@@ -135,4 +135,10 @@
   li {
     @apply text-secondary-foreground;
   }
+
+  button,
+  a,
+  input[type="button"] {
+    @apply cursor-pointer;
+  }
 }

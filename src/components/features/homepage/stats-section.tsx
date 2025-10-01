@@ -6,7 +6,13 @@ import { useEffect, useState } from "react";
 const stats = [
   { value: 10000, suffix: "+", label: "Active Users", duration: 2 },
   { value: 50000, suffix: "+", label: "Payment Links Created", duration: 2.5 },
-  { value: 1000000, prefix: "$", suffix: "+", label: "Processed in USDC", duration: 3 },
+  {
+    value: 1000000,
+    prefix: "$",
+    suffix: "+",
+    label: "Processed in USDC",
+    duration: 3,
+  },
   { value: 99.9, suffix: "%", label: "Uptime", duration: 2 },
 ];
 

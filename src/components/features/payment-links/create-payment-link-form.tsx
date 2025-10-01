@@ -513,10 +513,10 @@ export function CreatePaymentLinkForm({
                                 watchContentType === "link"
                                   ? "https://example.com/course"
                                   : watchContentType === "file"
-                                  ? "https://example.com/download/file.pdf"
-                                  : watchContentType === "access_code"
-                                  ? "COURSE2024"
-                                  : "Enter content..."
+                                    ? "https://example.com/download/file.pdf"
+                                    : watchContentType === "access_code"
+                                      ? "COURSE2024"
+                                      : "Enter content..."
                               }
                               {...field}
                             />

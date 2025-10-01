@@ -5,19 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useUrl from "@/hooks/use-url";
-import { 
-  Copy, 
-  Code, 
-  Smartphone, 
-  Tablet, 
-  Monitor, 
+import {
+  Copy,
+  Code,
+  Smartphone,
+  Tablet,
+  Monitor,
   Eye,
-  Settings
+  Settings,
 } from "lucide-react";
 
 interface PaymentLink {
@@ -46,14 +58,18 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
     showPoweredBy: true,
     buttonText: "Buy Now",
     width: "400",
-    height: "auto"
+    height: "auto",
   });
 
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [previewDevice, setPreviewDevice] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
   const [copied, setCopied] = useState<string | null>(null);
 
   const generateEmbedCode = (type: "iframe" | "script" | "button") => {
-    const baseUrl = appUrl ? `${appUrl}/${username}/${paymentLink.slug}` : `https://rely.ink/${username}/${paymentLink.slug}`;
+    const baseUrl = appUrl
+      ? `${appUrl}/${username}/${paymentLink.slug}`
+      : `https://rely.ink/${username}/${paymentLink.slug}`;
     const params = new URLSearchParams({
       embed: "true",
       theme: widgetStyle.theme,
@@ -77,7 +93,9 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
 </iframe>`;
 
       case "script":
-        const embedScriptUrl = appUrl ? `${appUrl}/embed.js` : `https://rely.ink/embed.js`;
+        const embedScriptUrl = appUrl
+          ? `${appUrl}/embed.js`
+          : `https://rely.ink/embed.js`;
         return `<script
   src="${embedScriptUrl}"
   data-payment-link="${paymentLink.slug}"
@@ -132,48 +150,56 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
 
   const getDeviceWidth = () => {
     switch (previewDevice) {
-      case "mobile": return "320px";
-      case "tablet": return "768px";
-      case "desktop": return "100%";
-      default: return "100%";
+      case "mobile":
+        return "320px";
+      case "tablet":
+        return "768px";
+      case "desktop":
+        return "100%";
+      default:
+        return "100%";
     }
   };
 
   const renderPreview = () => {
     const isSubscription = paymentLink.type === "subscription";
-    const priceText = isSubscription 
-      ? `$${paymentLink.price}/mo` 
+    const priceText = isSubscription
+      ? `$${paymentLink.price}/mo`
       : `$${paymentLink.price}`;
 
     return (
-      <div 
+      <div
         className="border rounded-lg overflow-hidden transition-all duration-300"
         style={{
           backgroundColor: widgetStyle.backgroundColor,
           borderRadius: `${widgetStyle.borderRadius}px`,
           width: getDeviceWidth(),
           maxWidth: "100%",
-          margin: "0 auto"
+          margin: "0 auto",
         }}
       >
         <div className="p-6 text-center">
-          <h3 
+          <h3
             className="text-xl font-bold mb-2"
-            style={{ color: widgetStyle.theme === "light" ? "#000000" : "#ffffff" }}
+            style={{
+              color: widgetStyle.theme === "light" ? "#000000" : "#ffffff",
+            }}
           >
             {paymentLink.title}
           </h3>
-          
+
           {widgetStyle.showDescription && paymentLink.description && (
-            <p 
+            <p
               className="text-sm mb-4 opacity-80"
-              style={{ color: widgetStyle.theme === "light" ? "#666666" : "#cccccc" }}
+              style={{
+                color: widgetStyle.theme === "light" ? "#666666" : "#cccccc",
+              }}
             >
               {paymentLink.description}
             </p>
           )}
-          
-          <div 
+
+          <div
             className="text-2xl font-bold mb-4"
             style={{ color: widgetStyle.primaryColor }}
           >
@@ -184,22 +210,24 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
               </span>
             )}
           </div>
-          
+
           <button
             className="px-6 py-3 rounded font-medium transition-all hover:opacity-80 w-full"
             style={{
               backgroundColor: widgetStyle.primaryColor,
               color: widgetStyle.theme === "light" ? "#ffffff" : "#000000",
-              borderRadius: `${widgetStyle.borderRadius}px`
+              borderRadius: `${widgetStyle.borderRadius}px`,
             }}
           >
             {widgetStyle.buttonText}
           </button>
-          
+
           {widgetStyle.showPoweredBy && (
-            <p 
+            <p
               className="text-xs mt-4 opacity-60"
-              style={{ color: widgetStyle.theme === "light" ? "#666666" : "#cccccc" }}
+              style={{
+                color: widgetStyle.theme === "light" ? "#666666" : "#cccccc",
+              }}
             >
               Powered by Relynk
             </p>
@@ -230,14 +258,17 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                   <Settings className="w-4 h-4" />
                   Widget Settings
                 </h4>
-                
+
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="theme">Theme</Label>
-                      <Select value={widgetStyle.theme} onValueChange={(value) => 
-                        setWidgetStyle(prev => ({ ...prev, theme: value }))
-                      }>
+                      <Select
+                        value={widgetStyle.theme}
+                        onValueChange={(value) =>
+                          setWidgetStyle((prev) => ({ ...prev, theme: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -247,12 +278,18 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="borderRadius">Border Radius</Label>
-                      <Select value={widgetStyle.borderRadius} onValueChange={(value) => 
-                        setWidgetStyle(prev => ({ ...prev, borderRadius: value }))
-                      }>
+                      <Select
+                        value={widgetStyle.borderRadius}
+                        onValueChange={(value) =>
+                          setWidgetStyle((prev) => ({
+                            ...prev,
+                            borderRadius: value,
+                          }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -265,7 +302,7 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="primaryColor">Primary Color</Label>
@@ -273,59 +310,92 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                         <input
                           type="color"
                           value={widgetStyle.primaryColor}
-                          onChange={(e) => setWidgetStyle(prev => ({ ...prev, primaryColor: e.target.value }))}
+                          onChange={(e) =>
+                            setWidgetStyle((prev) => ({
+                              ...prev,
+                              primaryColor: e.target.value,
+                            }))
+                          }
                           className="w-10 h-10 rounded border cursor-pointer"
                         />
                         <Input
                           value={widgetStyle.primaryColor}
-                          onChange={(e) => setWidgetStyle(prev => ({ ...prev, primaryColor: e.target.value }))}
+                          onChange={(e) =>
+                            setWidgetStyle((prev) => ({
+                              ...prev,
+                              primaryColor: e.target.value,
+                            }))
+                          }
                           placeholder="#000000"
                         />
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="backgroundColor">Background Color</Label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
                           value={widgetStyle.backgroundColor}
-                          onChange={(e) => setWidgetStyle(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                          onChange={(e) =>
+                            setWidgetStyle((prev) => ({
+                              ...prev,
+                              backgroundColor: e.target.value,
+                            }))
+                          }
                           className="w-10 h-10 rounded border cursor-pointer"
                         />
                         <Input
                           value={widgetStyle.backgroundColor}
-                          onChange={(e) => setWidgetStyle(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                          onChange={(e) =>
+                            setWidgetStyle((prev) => ({
+                              ...prev,
+                              backgroundColor: e.target.value,
+                            }))
+                          }
                           placeholder="#ffffff"
                         />
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="buttonText">Button Text</Label>
                     <Input
                       value={widgetStyle.buttonText}
-                      onChange={(e) => setWidgetStyle(prev => ({ ...prev, buttonText: e.target.value }))}
+                      onChange={(e) =>
+                        setWidgetStyle((prev) => ({
+                          ...prev,
+                          buttonText: e.target.value,
+                        }))
+                      }
                       placeholder="Buy Now"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="width">Width (px)</Label>
                       <Input
                         value={widgetStyle.width}
-                        onChange={(e) => setWidgetStyle(prev => ({ ...prev, width: e.target.value }))}
+                        onChange={(e) =>
+                          setWidgetStyle((prev) => ({
+                            ...prev,
+                            width: e.target.value,
+                          }))
+                        }
                         placeholder="400"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="height">Height</Label>
-                      <Select value={widgetStyle.height} onValueChange={(value) => 
-                        setWidgetStyle(prev => ({ ...prev, height: value }))
-                      }>
+                      <Select
+                        value={widgetStyle.height}
+                        onValueChange={(value) =>
+                          setWidgetStyle((prev) => ({ ...prev, height: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -338,24 +408,32 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="showDescription">Show Description</Label>
                       <Switch
                         checked={widgetStyle.showDescription}
-                        onCheckedChange={(checked) => 
-                          setWidgetStyle(prev => ({ ...prev, showDescription: checked }))
+                        onCheckedChange={(checked) =>
+                          setWidgetStyle((prev) => ({
+                            ...prev,
+                            showDescription: checked,
+                          }))
                         }
                       />
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="showPoweredBy">Show &quot;Powered by Relynk&quot;</Label>
+                      <Label htmlFor="showPoweredBy">
+                        Show &quot;Powered by Relynk&quot;
+                      </Label>
                       <Switch
                         checked={widgetStyle.showPoweredBy}
-                        onCheckedChange={(checked) => 
-                          setWidgetStyle(prev => ({ ...prev, showPoweredBy: checked }))
+                        onCheckedChange={(checked) =>
+                          setWidgetStyle((prev) => ({
+                            ...prev,
+                            showPoweredBy: checked,
+                          }))
                         }
                       />
                     </div>
@@ -371,7 +449,7 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                   <Eye className="w-4 h-4" />
                   Preview
                 </h4>
-                
+
                 <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                   <Button
                     variant={previewDevice === "desktop" ? "default" : "ghost"}
@@ -396,7 +474,7 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="border rounded-lg p-4 bg-gray-50 min-h-[300px] flex items-center justify-center">
                 {renderPreview()}
               </div>
@@ -420,16 +498,22 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
               <TabsTrigger value="script">JavaScript</TabsTrigger>
               <TabsTrigger value="button">Button Link</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="iframe" className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label>iFrame Embed</Label>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => copyToClipboard(generateEmbedCode("iframe"), "iframe")}
+                  onClick={() =>
+                    copyToClipboard(generateEmbedCode("iframe"), "iframe")
+                  }
                 >
-                  {copied === "iframe" ? "Copied!" : <Copy className="w-4 h-4" />}
+                  {copied === "iframe" ? (
+                    "Copied!"
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
               <Textarea
@@ -442,16 +526,22 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                 Simple iframe embed. Works on most websites and platforms.
               </p>
             </TabsContent>
-            
+
             <TabsContent value="script" className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label>JavaScript Embed</Label>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => copyToClipboard(generateEmbedCode("script"), "script")}
+                  onClick={() =>
+                    copyToClipboard(generateEmbedCode("script"), "script")
+                  }
                 >
-                  {copied === "script" ? "Copied!" : <Copy className="w-4 h-4" />}
+                  {copied === "script" ? (
+                    "Copied!"
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
               <Textarea
@@ -461,19 +551,26 @@ export function EmbedWidget({ paymentLink, username }: EmbedWidgetProps) {
                 className="font-mono text-sm"
               />
               <p className="text-sm text-muted-foreground">
-                Advanced embed with better responsive behavior and loading performance.
+                Advanced embed with better responsive behavior and loading
+                performance.
               </p>
             </TabsContent>
-            
+
             <TabsContent value="button" className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label>Button Link</Label>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => copyToClipboard(generateEmbedCode("button"), "button")}
+                  onClick={() =>
+                    copyToClipboard(generateEmbedCode("button"), "button")
+                  }
                 >
-                  {copied === "button" ? "Copied!" : <Copy className="w-4 h-4" />}
+                  {copied === "button" ? (
+                    "Copied!"
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
               <Textarea

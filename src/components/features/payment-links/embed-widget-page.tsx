@@ -11,7 +11,8 @@ const mockPaymentLinks = [
   {
     id: "1",
     title: "Web3 Consultation",
-    description: "1-hour consultation on Web3 development and blockchain integration",
+    description:
+      "1-hour consultation on Web3 development and blockchain integration",
     price: 150,
     currency: "USDC",
     slug: "web3-consultation",
@@ -54,7 +55,8 @@ const mockPaymentLinks = [
     slug: "coffee-support",
     type: "one_time" as const,
     contentType: "text" as const,
-    contentValue: "Thank you for your support! Your contribution helps me create more content.",
+    contentValue:
+      "Thank you for your support! Your contribution helps me create more content.",
     isActive: true,
     totalEarned: 125,
     totalSales: 25,
@@ -68,7 +70,7 @@ const mockPaymentLinks = [
 
 const mockUser = {
   username: "johndoe",
-  availableBalance: 2847.50,
+  availableBalance: 2847.5,
 };
 
 interface EmbedWidgetPageProps {
@@ -92,13 +94,13 @@ export function EmbedWidgetPage({ linkId }: EmbedWidgetPageProps) {
   useEffect(() => {
     const loadPaymentLink = async () => {
       // Find the payment link by ID
-      const foundLink = mockPaymentLinks.find(link => link.id === linkId);
-      
+      const foundLink = mockPaymentLinks.find((link) => link.id === linkId);
+
       if (!foundLink) {
-        router.push('/dashboard/payment-links');
+        router.push("/dashboard/payment-links");
         return;
       }
-      
+
       setPaymentLink(foundLink);
       setLoading(false);
     };
@@ -107,7 +109,7 @@ export function EmbedWidgetPage({ linkId }: EmbedWidgetPageProps) {
   }, [linkId, router]);
 
   const handleBack = () => {
-    router.push('/dashboard/payment-links');
+    router.push("/dashboard/payment-links");
   };
 
   if (loading) {
@@ -156,10 +158,7 @@ export function EmbedWidgetPage({ linkId }: EmbedWidgetPageProps) {
       </div>
 
       {/* Embed Widget */}
-      <EmbedWidget
-        paymentLink={paymentLink}
-        username={mockUser.username}
-      />
+      <EmbedWidget paymentLink={paymentLink} username={mockUser.username} />
     </div>
   );
 }

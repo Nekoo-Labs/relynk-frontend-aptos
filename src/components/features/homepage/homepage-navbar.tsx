@@ -133,12 +133,18 @@ export function HomepageNavbar() {
             transition={{ duration: 0.2, delay: 0.2 }}
           >
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                href="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Sign In
               </Link>
             </Button>
             <Button className="w-full" asChild>
-              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                href="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Get Started
               </Link>
             </Button>

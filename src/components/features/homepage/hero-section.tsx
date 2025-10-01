@@ -46,7 +46,9 @@ export function HeroSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Web3 Link-in-Bio Platform</span>
+            <span className="text-sm font-medium">
+              Web3 Link-in-Bio Platform
+            </span>
           </div>
         </motion.div>
 
